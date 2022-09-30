@@ -1,0 +1,21 @@
+.container-fluid {
+	background-color: white;}
+body {
+	background-color: white;
+	height: 200vh;}
+.foo {
+	height: 70vh;
+	background-color: #D8BFD8;
+}
+.loo {
+	height: 70vh;
+	padding: 14px;
+}
+.koo {
+	text-align: center;
+}
+.boo {
+	text-align: center;
+	padding: 30vh;}
+
+

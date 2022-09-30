@@ -1,0 +1,29 @@
+{%extends 'base.html'%}
+{%block body%}
+{{super()}}
+
+<form method='POST'>
+	{{form.hidden_tag()}}
+  <div class="mb-3">
+	{{form.fname.label}}
+	{{form.fname(class="form-control", id="exampleInputEmail1")}}
+  </div>
+
+  <div class="mb-3">
+	{{form.lname.label}}
+	{{form.fname(class="form-control", id="exampleInputEmail1")}}
+  </div>
+
+  <div class="mb-3">
+	{{form.email.label}}
+	{{form.email(class="form-control", id="exampleInputEmail1")}}
+  </div>
+  <div class="mb-3">
+	  {{form.password.label}}
+	  {{form.password(class="form-control", id="exampleInputPassword1")}}
+  </div>
+
+
+  {{form.submit()}}
+</form>
+{%endblock%}
