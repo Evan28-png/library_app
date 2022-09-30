@@ -4,6 +4,11 @@
 <div class='foo'>
 	<h1 class='boo'>Welcome to the LIbrarY</h1>
 </div>
+{%macro get_authors(object)%}
+ {%for obj in object%}
+ {{obj.name}}
+ {%endfor%}
+{%endmacro%}
 <div class='loo'>
 <h1 class='koo'>All books</h1>
 <table class="table">
@@ -21,7 +26,7 @@
 	    <td>{{book.id}}</td>
 	    <td>{{book.title}}</td>
 	    <td>{{book.category}}</td>
-	    <td>{{book.authors}}</td>
+	    <td>{{get_authors(book.author)}}</td>
 	    <td>
 		    <a class="btn btn-outline-success" href='http://127.0.0.1:5000/book?book_id={{book.id}}&book_title={{book.title}}'>Borrow</a>
 	    </td>

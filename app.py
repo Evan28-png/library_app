@@ -34,6 +34,7 @@ class Books(db.Model):
     def __str__(self):
         return f'{self.id}, {self.title}'
 
+
 class Author(db.Model):
     __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key=True)
@@ -41,7 +42,7 @@ class Author(db.Model):
     book = db.relationship('Books', secondary='association', backref='authors')
 
     def __str__(self):
-        return f'{self.id}, {self.name}'
+        return f'{self.name}'
 
 
 #Forms
