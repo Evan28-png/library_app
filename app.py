@@ -3,9 +3,9 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, EmailField, PasswordField
 from wtforms.validators import Email, InputRequired
 from flask_sqlalchemy import SQLAlchemy
-
 from flask_migrate import Migrate
-
+import bcrypt
+from flask_login import UserMixin
 
 
 app = Flask(__name__)
@@ -13,8 +13,8 @@ app.config['SECRET_KEY'] = 'HARD TO GUESS STRING'
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://debian-sys-maint:Hk9uZm4OdRiAc2Zg@localhost/flask'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] =False
 db = SQLAlchemy(app)
-
 migrate = Migrate(app, db)
+
 
 #Models
 association_table = db.Table(
@@ -35,6 +35,8 @@ class Books(db.Model):
         return f'{self.id}, {self.title}'
 
 
+
+
 class Author(db.Model):
     __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key=True)
@@ -44,8 +46,25 @@ class Author(db.Model):
     def __str__(self):
         return f'{self.name}'
 
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    fname = db.Column(db.String(32), index=True)
+    lname = db.Column(db.String(32), index=True)
+    pass_hash = db.Column(db.String(128))
+    
+    @property
+    def password(self):
+        raise AttributeError
 
-#Forms
+    @password.setter
+    def password(self, password):
+        self.pass_hash = bcrypt.generate_password_hash(password)
+
+    def verify_pass_hash(self, password):
+        return bcrypt.check_password_hash(self.pass_hash, password)
+
+
 class Registrationform(FlaskForm):
     fname = StringField('First name', [InputRequired()])
     lname = StringField('Last name', [InputRequired()])
@@ -53,12 +72,13 @@ class Registrationform(FlaskForm):
     password = PasswordField('Enter password', [InputRequired()])
     submit = SubmitField('Submit')
 
+
 class Loginform(FlaskForm):
     email = EmailField('Enter login email')
     password = PasswordField('Enter password')
 
 
-#Routes
+
 @app.route('/')
 def index():
     books = Books.query.all()
@@ -71,6 +91,11 @@ def borrow():
     book = Books.query.filter_by(id=book_id).first()
     return render_template('borrow.html', book=book)
 
+@app.route('/all_books')
+def all_books():
+    auth_id = request.args.get('author_id')
+    author = Author.query.filter_by(id=auth_id).first()
+    return render_template('all_books.html', author=author)
 
 
 @app.route('/registration', methods=['POST', 'GET'])
@@ -84,9 +109,17 @@ def registration():
             return redirect(url_for('index'))
     return render_template('registration.html', form=Registrationform())
 
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    pass
+    return render_template('login.html')
+
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 
 
 if __name__ == '__main__':
