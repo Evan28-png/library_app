@@ -1,0 +1,9 @@
+-- init.sql
+
+CREATE DATABASE IF NOT EXISTS flask;
+
+CREATE USER IF NOT EXISTS 'app'@'%' IDENTIFIED BY 'Pierreevan';
+
+GRANT ALL PRIVILEGES ON flask.* TO 'app'@'%';
+
+FLUSH PRIVILEGES;
