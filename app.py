@@ -10,18 +10,10 @@ import pymysql
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'HARD TO GUESS STRING'
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://debian-sys-maint:Hk9uZm4OdRiAc2Zg@localhost/flask'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://app:Pierreevan@db:3306/flask'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] =False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
-
-#Models
-association_table = db.Table(
-        'association',
-        db.Column('book_id', db.ForeignKey('books.id'), primary_key=True),
-        db.Column('author_id', db.ForeignKey('authors.id'), primary_key=True),
-        )
 
 class Books(db.Model):
     __tablename__ = 'books'
@@ -30,11 +22,8 @@ class Books(db.Model):
     category = db.Column(db.String(32))
     author = db.relationship('Author', secondary='association', backref='books')
 
-
     def __str__(self):
         return f'{self.id}, {self.title}'
-
-
 
 
 class Author(db.Model):
@@ -45,6 +34,7 @@ class Author(db.Model):
 
     def __str__(self):
         return f'{self.name}'
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -63,6 +53,15 @@ class User(UserMixin, db.Model):
 
     def verify_pass_hash(self, password):
         return bcrypt.check_password_hash(self.pass_hash, password)
+
+
+#Models
+association_table = db.Table(
+        'association',
+        db.Column('book_id', db.ForeignKey('books.id'), primary_key=True),
+        db.Column('author_id', db.ForeignKey('authors.id'), primary_key=True),
+        )
+
 
 
 class Registrationform(FlaskForm):
