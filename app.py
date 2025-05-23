@@ -10,9 +10,16 @@ import pymysql
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'HARD TO GUESS STRING'
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://app:Pierreevan@db:3306/flask'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://evan:Pierreevan@localhost/flask'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] =False
 db = SQLAlchemy(app)
+
+#Models
+association_table = db.Table(
+        'association',
+        db.Column('book_id', db.ForeignKey('books.id'), primary_key=True),
+        db.Column('author_id', db.ForeignKey('authors.id'), primary_key=True),
+        )
 migrate = Migrate(app, db)
 
 class Books(db.Model):
@@ -20,7 +27,7 @@ class Books(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(34), index=True)
     category = db.Column(db.String(32))
-    author = db.relationship('Author', secondary='association', backref='books')
+    authors = db.relationship('Author', secondary=association_table, back_populates='books')
 
     def __str__(self):
         return f'{self.id}, {self.title}'
@@ -30,7 +37,7 @@ class Author(db.Model):
     __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), index=True)
-    book = db.relationship('Books', secondary='association', backref='authors')
+    books = db.relationship('Books', secondary=association_table, back_populates='authors')
 
     def __str__(self):
         return f'{self.name}'
@@ -55,12 +62,6 @@ class User(UserMixin, db.Model):
         return bcrypt.check_password_hash(self.pass_hash, password)
 
 
-#Models
-association_table = db.Table(
-        'association',
-        db.Column('book_id', db.ForeignKey('books.id'), primary_key=True),
-        db.Column('author_id', db.ForeignKey('authors.id'), primary_key=True),
-        )
 
 
 
@@ -72,15 +73,19 @@ class Registrationform(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class Loginform(FlaskForm):
-    email = EmailField('Enter login email')
-    password = PasswordField('Enter password')
+#class Loginform(FlaskForm):
+#    email = EmailField('Enter login email')
+#    password = PasswordField('Enter password')
 
 
 
 @app.route('/')
 def index():
-    books = Books.query.all()
+    #return "it is working"
+    try:
+        books = Books.query.all()
+    except Exception as e:
+        print(f'error in book.query{e}')
     return render_template('index.html', books=books)
 
 
