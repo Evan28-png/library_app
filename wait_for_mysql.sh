@@ -4,7 +4,8 @@ while ! nc -z db 3306; do
   sleep 1.4
 done
 echo "MySQL is up!"
-exec flask db upgrade 
-exec gunicorn app:app --bind 0.0.0.0:3000
+flask db upgrade 
+gunicorn app:app --bind 0.0.0.0:3000 --log-level debug --capture-output
 
-
+#use exec only once pref last command to run
+#as it repleacves the shell
