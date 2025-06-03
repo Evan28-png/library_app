@@ -14,6 +14,15 @@ pipeline {
             }
         }
 
+	stage('prepare init sql') {
+	    steps {
+		echo "copying init.sql to /temp"
+		sh "cp init.sql /tmp/init.sql"
+       	    }
+	}	
+
+
+ 
         stage('Build Docker Containers') {
             steps {
                 echo "🔨 Building Docker containers using docker-compose..."
