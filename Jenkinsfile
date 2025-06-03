@@ -17,14 +17,14 @@ pipeline {
         stage('Build Docker Containers') {
             steps {
                 echo "🔨 Building Docker containers using docker-compose..."
-                sh 'docker compose build'
+                sh 'docker-compose build'
             }
         }
 
         stage('Start Application') {
             steps {
                 echo "🚀 Starting the Flask app and its services in detached mode..."
-                sh 'docker compose up -d'
+                sh 'docker-compose up -d'
             }
         }
 
