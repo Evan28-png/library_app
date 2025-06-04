@@ -21,7 +21,6 @@ pipeline {
        	    }
 	}	
 
-
  
         stage('Build Docker Containers') {
             steps {
@@ -37,17 +36,6 @@ pipeline {
             }
         }
 
-        //stage('Run Tests') {
-        //    steps {
-        //        echo "🧪 Running tests inside the Flask container..."
-        //        // Replace "web" with the actual name of your Flask service in docker-compose.yml
-        //        sh '''
-        //            CONTAINER_ID=$(docker ps -qf "name=apptest")
-        //            docker exec $CONTAINER_ID pytest || echo "❌ Tests failed"
-        //        '''
-        //    }
-        //}
-
         stage('Post-Deployment Check') {
             steps {
                 echo "🔍 Verifying that the Flask app is running..."
@@ -55,21 +43,21 @@ pipeline {
             }
         }
 
-//        stage('Clean Up (Optional)') {
-//            steps {
-//                echo "🧹 Cleaning up containers (you can disable this in production)..."
-//                sh 'docker-compose down'
-//            }
-//        }
+        stage('Clean Up (Optional)') {
+            steps {
+                echo "🧹 Cleaning up containers (you can disable this in production)..."
+                sh 'docker-compose down'
+            }
+        }
+  }
+
+    post {
+        always {
+            echo "📋 Pipeline finished."
+        }
+        failure {
+            echo "🚨 Something went wrong. Check the logs for details."
+        }
     }
-//
-//    post {
-//        always {
-//            echo "📋 Pipeline finished."
-//        }
-//        failure {
-//            echo "🚨 Something went wrong. Check the logs for details."
-//        }
-//    }
 }
 
