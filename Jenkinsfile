@@ -17,7 +17,7 @@ pipeline {
             steps {
                 // Run docker-compose commands in the repo root so init.sql is accessible
                 dir('.') {
-                    sh 'docker-compose -build'
+                    sh 'docker-compose build'
                     sh 'docker-compose up -d'
                 }
             }
@@ -35,7 +35,7 @@ pipeline {
         always {
             // Cleanup containers, volumes, networks to avoid leftovers
             dir('.') {
-                sh 'docker-compose -f $DOCKER_COMPOSE_FILE down -v'
+                sh 'docker-compose down -v'
             }
         }
     }
