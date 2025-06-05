@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone your GitHub repo (change URL to your repo)
-                git url: 'https://github.com/Evan28-png/library_app.git', branch: 'main'
+                git url: 'https://github.com/Evan28-png/library_app.git', branch: 'testing'
             }
         }
 
