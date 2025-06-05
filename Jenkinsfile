@@ -3,6 +3,7 @@ pipeline {
 
     environment {
        COMPOSE_PROJECT_NAME = "apptest"
+       pwd = "${env.WORKSPACE}"
     }
 
     stages {
