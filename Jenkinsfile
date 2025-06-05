@@ -36,7 +36,7 @@ pipeline {
         always {
             // Cleanup containers, volumes, networks to avoid leftovers
 	    echo "waiting for  120 seconds before cleanup"
-	    sleep time: 120, unit: 'SECONDS'
+	    sleep time: 600, unit: 'SECONDS'
 	
             dir('.') {
                 sh 'docker-compose down -v'
