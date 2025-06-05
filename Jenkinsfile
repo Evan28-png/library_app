@@ -2,61 +2,41 @@ pipeline {
     agent any
 
     environment {
-        COMPOSE_PROJECT_NAME = "apptest"
+       COMPOSE_PROJECT_NAME = "apptest"
     }
 
     stages {
-
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                echo "📦 Cloning the Flask app repository..."
-                git 'https://github.com/Evan28-png/library_app.git'
+                // Clone your GitHub repo (change URL to your repo)
+                git url: 'https://github.com/Evan28-png/library_app.git', branch: 'main'
             }
         }
 
-	stage('prepare init sql') {
-	    steps {
-		echo "copying init.sql to /temp"
-		sh "cp init.sql /tmp/init.sql"
-       	    }
-	}	
-
- 
-        stage('Build Docker Containers') {
+        stage('Build & Run') {
             steps {
-                echo "🔨 Building Docker containers using docker-compose..."
-                sh 'docker-compose build'
+                // Run docker-compose commands in the repo root so init.sql is accessible
+                dir('.') {
+                    sh 'docker-compose -build'
+                    sh 'docker-compose up -d'
+                }
             }
         }
 
-        stage('Start Application') {
+        stage('Test') {
             steps {
-                echo "🚀 Starting the Flask app and its services in detached mode..."
-                sh 'docker-compose up -d'
+                // Placeholder for your tests
+                echo 'Add your test commands here'
             }
         }
-
-        stage('Post-Deployment Check') {
-            steps {
-                echo "🔍 Verifying that the Flask app is running..."
-                sh 'curl -I http://localhost:5000 || echo "⚠️ App may not be responding"'
-            }
-        }
-
-        stage('Clean Up (Optional)') {
-            steps {
-                echo "🧹 Cleaning up containers (you can disable this in production)..."
-                sh 'docker-compose down'
-            }
-        }
-  }
+    }
 
     post {
         always {
-            echo "📋 Pipeline finished."
-        }
-        failure {
-            echo "🚨 Something went wrong. Check the logs for details."
+            // Cleanup containers, volumes, networks to avoid leftovers
+            dir('.') {
+                sh 'docker-compose -f $DOCKER_COMPOSE_FILE down -v'
+            }
         }
     }
 }
