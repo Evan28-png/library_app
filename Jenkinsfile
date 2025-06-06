@@ -19,7 +19,7 @@ pipeline {
                 // Run docker-compose commands in the repo root so init.sql is accessible
                 dir('.') {
 		    sh 'ls -l'
-		    echo 'variable is $PWD'
+		    sh "echo 'variable is $PWD'"
                     sh 'docker-compose build'
                     sh 'docker-compose up -d'
                 }
