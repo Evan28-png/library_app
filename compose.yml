@@ -4,7 +4,7 @@ services:
     restart: always
     volumes:
       - mysql_data:/var/lib/mysql
-      - /opt/jenkins_agent/workspace/lib_app/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /opt/jenkins_agent/workspace/${JOB_NAME}/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks: 
       - app-network
     environment:
