@@ -19,7 +19,6 @@ pipeline {
                 // Run docker-compose commands in the repo root so init.sql is accessible
                 dir('.') {
 		    sh 'ls -l'
-		    sh "echo 'variable is $PWD'"
                     sh 'docker-compose build'
                     sh 'docker-compose up -d'
                 }
@@ -37,7 +36,7 @@ pipeline {
     post {
         always {
             // Cleanup containers, volumes, networks to avoid leftovers
-	    echo "waiting for  120 seconds before cleanup"
+	    echo "waiting for 10 mins before cleanup"
 	    sleep time: 600, unit: 'SECONDS'
 	
             dir('.') {
