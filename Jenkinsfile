@@ -3,7 +3,7 @@ pipeline {
 
     environment {
        COMPOSE_PROJECT_NAME = "apptest"
-       JOB_NAME=${env.JOB_NAME}"
+       JOB_NAME="${env.JOB_NAME}"
     }
 
     stages {
