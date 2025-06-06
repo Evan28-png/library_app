@@ -18,7 +18,7 @@ pipeline {
             steps {
                 // Run docker-compose commands in the repo root so init.sql is accessible
                 dir('.') {
-		    sh 'ls -l'
+		    sh 'ls -l ${PWD}/init.sql'
                     sh 'docker-compose build'
                     sh 'docker-compose up -d'
                 }
