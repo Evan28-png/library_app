@@ -3,7 +3,7 @@ pipeline {
 
     environment {
        COMPOSE_PROJECT_NAME = "apptest"
-       PWD = "${env.WORKSPACE}"
+       HOST_WORKDIR = "/home/jenkins/agent/${env.JOB_NAME}"
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 // Run docker-compose commands in the repo root so init.sql is accessible
                 dir('.') {
-		    sh 'export PWD=$PWD'
+		    sh 'export HOST_WORKDIR=$HOST_WORKDIR'
                     sh 'docker-compose build'
                     sh 'docker-compose up -d'
                 }
